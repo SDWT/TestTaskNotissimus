@@ -1,4 +1,5 @@
 ﻿using System;
+using TestTaskNotissimus.Parsers;
 
 namespace TestTaskNotissimus
 {
@@ -6,7 +7,21 @@ namespace TestTaskNotissimus
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+
+            // Test
+            string address = "https://www.toy.ru/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/";
+
+            Testing("https://www.toy.ru/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/");
+            Testing("https://www.toy.ru/catalog/mashinki_iz_multfilmov/fortnite_fnt0163_mashina_quadcrasher/");
+        }
+
+        static void Testing(string address)
+        {
+            Console.WriteLine(address);
+
+            var parser = new ToyRuParser();
+            parser.GetProduct(address).Wait();
+            Console.WriteLine();
         }
     }
 }

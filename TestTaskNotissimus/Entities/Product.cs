@@ -26,17 +26,17 @@ namespace TestTaskNotissimus.Entities
         /// <summary>
         /// Цена
         /// </summary>
-        public decimal Price { get; set; }
+        public string Price { get; set; }
 
         /// <summary>
         /// Цена старая;
         /// </summary>
-        public decimal OldPrice { get; set; }
+        public string OldPrice { get; set; }
 
         /// <summary>
         /// Раздел с наличием(В наличии товар или не в наличии)
         /// </summary>
-        public bool IsInStock { get; set; }
+        public string IsInStock { get; set; }
 
         /// <summary>
         /// Ссылки на картинки

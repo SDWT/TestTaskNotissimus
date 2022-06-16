@@ -21,10 +21,45 @@ namespace TestTaskNotissimus.Parsers
         /// <returns>Товар</returns>
         public async Task GetProduct(string address)
         {
-            using var context = BrowsingContext.New(Configuration.Default);
-            using var doc = await context.OpenAsync(address);
+            var config = Configuration.Default.WithDefaultLoader();
+            using var context = BrowsingContext.New(config);
+            using var document = await context.OpenAsync(address);
 
+            Product product = new Product();
 
+            if (document is null)
+            {
+
+                Console.WriteLine("doc is null");
+                return;
+            }
+
+            document.GetElementsByClassName("price").All((el) =>
+            {
+                Console.WriteLine(el.TextContent);
+                return true;
+            });
+
+            document.GetElementsByClassName("old-price").All((el) =>
+            {
+                Console.WriteLine(el.TextContent);
+                return true;
+            });
+
+            //if (decimal.TryParse(doc.GetElementsByClassName("price").FirstOrDefault().TextContent.Split(' ')[0], out product.Price);
+            
+            product.Price = GetElementByClassName(document, "price");
+            Console.WriteLine($"Цена: {product.Price}");
+
+            product.OldPrice = GetElementByClassName(document, "old-price");
+            Console.WriteLine($"Старая цена: {product.OldPrice}");
+
+        }
+
+        private string GetElementByClassName(AngleSharp.Dom.IDocument? document, string className)
+        {
+            var element = document.GetElementsByClassName(className).FirstOrDefault();
+            return element is null ? String.Empty : element.TextContent;
         }
     }
 }
