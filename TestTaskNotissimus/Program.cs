@@ -20,7 +20,7 @@ namespace TestTaskNotissimus
             Console.WriteLine(address);
 
             var parser = new ToyRuParser();
-            parser.GetProduct(address).Wait();
+            parser.GetProductAsync(address).Wait();
             Console.WriteLine();
         }
     }
