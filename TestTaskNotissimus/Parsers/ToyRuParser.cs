@@ -103,7 +103,7 @@ namespace TestTaskNotissimus.Parsers
             product.BreadCrumbs = strB.ToString(0, strB.Length - 1);
             strB.Clear();
 
-            document.GetElementsByClassName("card-slider-nav").All((el) =>
+            _ = document.GetElementsByClassName("card-slider-nav").All((el) =>
             //document.GetElementsByClassName("slick-slide").All((el) =>
             {
                 //el.FirstChild?.TextContent;
@@ -120,7 +120,14 @@ namespace TestTaskNotissimus.Parsers
                 {
                     //Console.WriteLine(item.FirstElementChild.GetAttribute("src"));
 
-                    string imgUrl = item.FirstElementChild.GetAttribute("src");
+                    if (item.FirstElementChild is null)
+                        continue;
+
+                    string? imgUrl = item.FirstElementChild?.GetAttribute("src");
+
+                    if (imgUrl == null)
+                        continue;
+
                     var path = imgUrl.Split('/');
 
                     var pathBuilder = new StringBuilder();
