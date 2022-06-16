@@ -33,15 +33,24 @@ namespace TestTaskNotissimus.Parsers
                 return product;
             }
 
+            // цена
             //document.GetElementsByClassName("price").All((el) =>
             //{
             //    Console.WriteLine(el.TextContent);
             //    return true;
             //});
 
+            // старая цена
             //document.GetElementsByClassName("old-price").All((el) =>
             //{
             //    Console.WriteLine(el.TextContent);
+            //    return true;
+            //});
+
+            // Регион
+            //var elements = document.QuerySelectorAll("*[data-src=\"#region\"]").All((el) =>
+            //{
+            //    Console.WriteLine(el.TextContent.Trim());
             //    return true;
             //});
 
@@ -49,6 +58,14 @@ namespace TestTaskNotissimus.Parsers
             product.ProductUrl = address;
             product.Price = GetElementByClassName(document, "price");
             product.OldPrice = GetElementByClassName(document, "old-price");
+
+            var element = document.QuerySelectorAll("*[data-src=\"#region\"]").FirstOrDefault();
+            product.RegionName = element is null ? String.Empty : element.TextContent.Trim();
+
+
+
+
+            //product.OldPrice = document.GetElement(className).FirstOrDefault();
 
             //if (decimal.TryParse(doc.GetElementsByClassName("price").FirstOrDefault().TextContent.Split(' ')[0], out product.Price);
 
