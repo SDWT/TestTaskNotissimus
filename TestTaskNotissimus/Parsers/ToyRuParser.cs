@@ -61,10 +61,18 @@ namespace TestTaskNotissimus.Parsers
             //    return true;
             //});
 
+            // наличие
+            //document.GetElementsByClassName("ok").All((el) =>
+            //{
+            //    Console.WriteLine(el.TextContent);
+            //    return true;
+            //});
+
             product.ProductUrl = address;
             product.ProductName = GetElementByClassName(document, "detail-name");
             product.Price = GetElementByClassName(document, "price");
             product.OldPrice = GetElementByClassName(document, "old-price");
+            product.IsInStock = GetElementByClassName(document, "ok").Trim();
 
             var element = document.QuerySelectorAll("*[data-src=\"#region\"]").FirstOrDefault();
             product.RegionName = element is null ? String.Empty : element.TextContent.Trim();
@@ -82,6 +90,7 @@ namespace TestTaskNotissimus.Parsers
             //product.IsInStock;
             //product.ImageUrls;
 
+            Console.WriteLine();
             Console.WriteLine($"Регион: {product.RegionName}");
             Console.WriteLine($"Хлебные крошки: {product.BreadCrumbs}");
             Console.WriteLine($"Название: {product.ProductName}");
