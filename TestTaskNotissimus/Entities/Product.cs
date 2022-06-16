@@ -41,7 +41,7 @@ namespace TestTaskNotissimus.Entities
         /// <summary>
         /// Ссылки на картинки
         /// </summary>
-        public string[] ImageUrls { get; set; }
+        public string ImageUrls { get; set; }
 
         /// <summary>
         /// Ссылка на товар

@@ -101,7 +101,79 @@ namespace TestTaskNotissimus.Parsers
                 return true;
             });
             product.BreadCrumbs = strB.ToString(0, strB.Length - 1);
+            strB.Clear();
 
+            document.GetElementsByClassName("card-slider-nav").All((el) =>
+            //document.GetElementsByClassName("slick-slide").All((el) =>
+            {
+                //el.FirstChild?.TextContent;
+                //if (el.TextContent == "Вернуться")
+                //{
+                //    return false;
+
+                //}
+                //strB.Append($"{el.GetAttribute("src")}\t");
+
+                //Console.WriteLine($"{el.FirstElementChild?.GetAttribute("src")}");
+                Console.WriteLine($"{el.ChildElementCount}");
+                foreach (var item in el.Children)
+                {
+                    //Console.WriteLine(item.FirstElementChild.GetAttribute("src"));
+
+                    string imgUrl = item.FirstElementChild.GetAttribute("src");
+                    var path = imgUrl.Split('/');
+
+                    var pathBuilder = new StringBuilder();
+
+                    for (int i = 0; i < path.Length; i++)
+                    {
+                        if (i == 4 || i == 7)
+                            continue;
+                        //Console.WriteLine($"{i}: {path[i]}");
+                        pathBuilder.Append(path[i]);
+                        pathBuilder.Append('/');
+                    }
+                    //Console.WriteLine($"\t{item.TagName}");
+                    //Console.WriteLine($"\t{item.TextContent}");
+                    //Console.WriteLine($"\t{item.ToHtml().ToString()}");
+
+
+                    //Console.WriteLine($"\t{item.Attributes.Length}");
+                    //Console.WriteLine();
+                    //foreach (var item2 in item.Attributes)
+                    //    Console.WriteLine($"\t{item2.Name}");
+                    strB.Append(imgUrl);
+                    strB.Append('\t');
+                    strB.Append(pathBuilder.ToString(0, pathBuilder.Length - 1));
+                    strB.Append('\t');
+                }
+
+                return true;
+            });
+            product.ImageUrls = strB.ToString(0, strB.Length - 1);
+            strB.Clear();
+
+            //document.QuerySelectorAll(".card-slider-nav > .img-fluid").All((el) =>
+            //{
+            //    if (el.TextContent == "Вернуться")
+            //    {
+            //        return false;
+
+            //    }
+            //    strB.Append($"{el.GetAttribute("src")}\t");
+
+            //    // Хлебные крошки с ссылками
+            //    //if (el.TagName == "A")
+            //    //    strB.Append($"{el.TextContent.Trim()}({_BaseURL}{el.GetAttribute("href")})\t");
+            //    //else
+            //    //    strB.Append($"{el.TextContent.Trim()}\t");
+
+            //    Console.WriteLine($"{el.TextContent}");
+            //    return true;
+            //});
+
+            //if (strB.Length > 0)
+            //    product.ImageUrls = strB.ToString(0, strB.Length - 1);
 
             //product.OldPrice = document.GetElement(className).FirstOrDefault();
 
