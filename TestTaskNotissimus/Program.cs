@@ -18,9 +18,20 @@ namespace TestTaskNotissimus
         static void Testing(string address)
         {
             Console.WriteLine(address);
+            Console.WriteLine();
 
             var parser = new ToyRuParser();
-            parser.GetProductAsync(address).Wait();
+            var product = parser.GetProductAsync(address).Result;
+
+            Console.WriteLine($"Регион: {product.RegionName}");
+            Console.WriteLine($"Хлебные крошки: {product.BreadCrumbs}");
+            Console.WriteLine($"Название: {product.ProductName}");
+            Console.WriteLine($"Цена: {product.Price}");
+            Console.WriteLine($"Старая цена: {product.OldPrice}");
+            Console.WriteLine($"Наличие: {product.IsInStock}");
+            Console.WriteLine($"Ссылки на изображения: {product.ImageUrls}");
+            Console.WriteLine($"Ссылка на товар: {product.ProductUrl}");
+
             Console.WriteLine();
         }
     }
