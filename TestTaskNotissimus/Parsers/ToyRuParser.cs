@@ -54,8 +54,15 @@ namespace TestTaskNotissimus.Parsers
             //    return true;
             //});
 
+            // Имя
+            //document.GetElementsByClassName("detail-name").All((el) =>
+            //{
+            //    Console.WriteLine(el.TextContent);
+            //    return true;
+            //});
 
             product.ProductUrl = address;
+            product.ProductName = GetElementByClassName(document, "detail-name");
             product.Price = GetElementByClassName(document, "price");
             product.OldPrice = GetElementByClassName(document, "old-price");
 
