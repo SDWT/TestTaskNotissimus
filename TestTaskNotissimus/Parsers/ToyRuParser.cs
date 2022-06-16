@@ -10,7 +10,8 @@ namespace TestTaskNotissimus.Parsers
 {
     public class ToyRuParser
     {
-        private string CatalogURL = "https://www.toy.ru/catalog/boy_transport/";
+        private string _CatalogURL = "https://www.toy.ru/catalog/boy_transport/";
+        private string _BaseURL = "https://www.toy.ru";
 
         //public async Task<Product> GetProduct(string address)
 
@@ -77,17 +78,36 @@ namespace TestTaskNotissimus.Parsers
             var element = document.QuerySelectorAll("*[data-src=\"#region\"]").FirstOrDefault();
             product.RegionName = element is null ? String.Empty : element.TextContent.Trim();
 
+            // Хлебные крошки
+            var strB = new StringBuilder();
 
+
+            document.GetElementsByClassName("breadcrumb-item").All((el) =>
+            {
+                if (el.TextContent == "Вернуться")
+                {
+                    return false;
+
+                }
+                strB.Append($"{el.TextContent.Trim()}\t");
+
+                // Хлебные крошки с ссылками
+                //if (el.TagName == "A")
+                //    strB.Append($"{el.TextContent.Trim()}({_BaseURL}{el.GetAttribute("href")})\t");
+                //else
+                //    strB.Append($"{el.TextContent.Trim()}\t");
+
+                //Console.WriteLine($"{el.TagName} {el.TextContent}");
+                return true;
+            });
+            product.BreadCrumbs = strB.ToString(0, strB.Length - 1);
 
 
             //product.OldPrice = document.GetElement(className).FirstOrDefault();
 
             //if (decimal.TryParse(doc.GetElementsByClassName("price").FirstOrDefault().TextContent.Split(' ')[0], out product.Price);
 
-            //product.RegionName;
             //product.BreadCrumbs;
-            //product.ProductName;
-            //product.IsInStock;
             //product.ImageUrls;
 
             Console.WriteLine();
