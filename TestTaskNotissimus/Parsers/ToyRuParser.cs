@@ -1,4 +1,5 @@
 ﻿using AngleSharp;
+using AngleSharp.Io;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,21 @@ namespace TestTaskNotissimus.Parsers
 {
     public class ToyRuParser
     {
-        //private string _CatalogURL = "https://www.toy.ru/catalog/boy_transport/";
-        private string _BaseURL = "https://www.toy.ru";
-        private const string filename = "out.csv";
+        //private string catalogURL = "https://www.toy.ru/catalog/boy_transport/";
+        private string baseURL = "https://www.toy.ru";
+        private readonly string filename = "out.csv";
+        private readonly string region;
+
         //private object locker = new();
         public int countActiveThreads = 0;
 
         //public async Task<Product> GetProduct(string address)
+
+        public ToyRuParser(string filename, string region = "")
+        {
+            this.filename = filename;
+            this.region = region;
+        }
 
         #region Get
 
@@ -28,9 +37,11 @@ namespace TestTaskNotissimus.Parsers
         /// <returns>Товары</returns>
         public async Task<IEnumerable<Product>> GetProductsAsync(string catalogAddress)
         {
-            var config = Configuration.Default.WithDefaultLoader();
+            var config = Configuration.Default.WithDefaultLoader().WithDefaultCookies();
             using var context = BrowsingContext.New(config);
-            using var document = await context.OpenAsync($"{_BaseURL}{catalogAddress}");
+            if (!string.IsNullOrEmpty(region))
+                context.SetCookie(new AngleSharp.Dom.Url($"{baseURL}"), "BITRIX_SM_city=61000001000");
+            using var document = await context.OpenAsync($"{baseURL}{catalogAddress}");
 
 
             var elements = document.GetElementsByClassName("page-link");
@@ -82,9 +93,11 @@ namespace TestTaskNotissimus.Parsers
         /// <returns>Товары</returns>
         public async Task<IEnumerable<Product>> GetPageProductsAsync(string pageAddress)
         {
-            var config = Configuration.Default.WithDefaultLoader();
+            var config = Configuration.Default.WithDefaultLoader().WithDefaultCookies();
             using var context = BrowsingContext.New(config);
-            using var document = await context.OpenAsync($"{_BaseURL}{pageAddress}");
+            if (!string.IsNullOrEmpty(region))
+                context.SetCookie(new AngleSharp.Dom.Url($"{baseURL}"), "BITRIX_SM_city=61000001000");
+            using var document = await context.OpenAsync($"{baseURL}{pageAddress}");
 
             var productsUrls = new List<string>();
             var strB = new StringBuilder();
@@ -129,9 +142,15 @@ namespace TestTaskNotissimus.Parsers
         /// <returns>Товар</returns>
         public async Task<Product> GetProductAsync(string address)
         {
-            var config = Configuration.Default.WithDefaultLoader();
+            var config = Configuration.Default.WithDefaultCookies().WithDefaultLoader();
             using var context = BrowsingContext.New(config);
-            using var document = await context.OpenAsync($"{_BaseURL}{address}");
+            context.SetCookie(new AngleSharp.Dom.Url($"{baseURL}"), "BITRIX_SM_city=61000001000");
+            using var document = await context.OpenAsync($"{baseURL}{address}");
+            //using var document = await context.OpenAsync(res =>
+            //    res.Address($"{_BaseURL}{address}").
+            //        Header(HeaderNames.SetCookie, "BITRIX_SM_city=61000001000"));
+
+            //Console.WriteLine(document.Cookie);
 
             Product product = new();
 
@@ -142,7 +161,7 @@ namespace TestTaskNotissimus.Parsers
                 return product;
             }
 
-            product.ProductUrl = $"{_BaseURL}{address}";                            // Ссылка на товар
+            product.ProductUrl = $"{baseURL}{address}";                            // Ссылка на товар
             product.ProductName = GetElementByClassName(document, "detail-name");   // Название товара
             product.Price = GetElementByClassName(document, "price");               // Новая цена
             product.OldPrice = GetElementByClassName(document, "old-price");        // Старая цена
@@ -171,7 +190,7 @@ namespace TestTaskNotissimus.Parsers
                 //    strB.Append($"{el.TextContent.Trim()}\t");
                 return true;
             });
-            product.BreadCrumbs = strB.ToString(0, strB.Length - 1);
+            product.BreadCrumbs = strB.Length <= 1 ? String.Empty : strB.ToString(0, strB.Length - 1);
             strB.Clear();
 
             // Ссылки на изображения
@@ -206,7 +225,7 @@ namespace TestTaskNotissimus.Parsers
 
                 return true;
             });
-            product.ImageUrls = strB.ToString(0, strB.Length - 1);
+            product.ImageUrls = strB.Length <= 1 ? String.Empty : strB.ToString(0, strB.Length - 1);
             strB.Clear();
 
             return product;
@@ -223,9 +242,11 @@ namespace TestTaskNotissimus.Parsers
         /// <returns>Товары</returns>
         public async Task ToCSVProductsAsync(string catalogAddress)
         {
-            var config = Configuration.Default.WithDefaultLoader();
+            var config = Configuration.Default.WithDefaultLoader().WithDefaultCookies();
             using var context = BrowsingContext.New(config);
-            using var document = await context.OpenAsync($"{_BaseURL}{catalogAddress}");
+            if (!string.IsNullOrEmpty(region))
+                context.SetCookie(new AngleSharp.Dom.Url($"{baseURL}"), "BITRIX_SM_city=61000001000");
+            using var document = await context.OpenAsync($"{baseURL}{catalogAddress}");
 
             await ToCSVPageProductsAsync(catalogAddress); // Первая страница каталога
 
@@ -262,9 +283,11 @@ namespace TestTaskNotissimus.Parsers
         /// <returns>Товары</returns>
         public async Task ToCSVPageProductsAsync(string pageAddress)
         {
-            var config = Configuration.Default.WithDefaultLoader();
+            var config = Configuration.Default.WithDefaultLoader().WithDefaultCookies();
             using var context = BrowsingContext.New(config);
-            using var document = await context.OpenAsync($"{_BaseURL}{pageAddress}");
+            if (!string.IsNullOrEmpty(region))
+                context.SetCookie(new AngleSharp.Dom.Url($"{baseURL}"), "BITRIX_SM_city=61000001000");
+            using var document = await context.OpenAsync($"{baseURL}{pageAddress}");
 
             var productsUrls = new List<string>();
 
@@ -319,9 +342,11 @@ namespace TestTaskNotissimus.Parsers
         /// <returns>Товар</returns>
         public async Task ToCSVProductAsync(string address)
         {
-            var config = Configuration.Default.WithDefaultLoader();
+            var config = Configuration.Default.WithDefaultLoader().WithDefaultCookies();
             using var context = BrowsingContext.New(config);
-            using var document = await context.OpenAsync($"{_BaseURL}{address}");
+            if (!string.IsNullOrEmpty(region))
+                context.SetCookie(new AngleSharp.Dom.Url($"{baseURL}"), "BITRIX_SM_city=61000001000");
+            using var document = await context.OpenAsync($"{baseURL}{address}");
 
             Product product = new();
 
@@ -332,7 +357,7 @@ namespace TestTaskNotissimus.Parsers
                 return;
             }
 
-            product.ProductUrl = $"{_BaseURL}{address}";                            // Ссылка на товар
+            product.ProductUrl = $"{baseURL}{address}";                            // Ссылка на товар
             product.ProductName = GetElementByClassName(document, "detail-name");   // Название товара
             product.Price = GetElementByClassName(document, "price");               // Новая цена
             product.OldPrice = GetElementByClassName(document, "old-price");        // Старая цена
