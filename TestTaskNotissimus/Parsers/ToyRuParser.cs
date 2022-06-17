@@ -15,6 +15,55 @@ namespace TestTaskNotissimus.Parsers
 
         //public async Task<Product> GetProduct(string address)
 
+        public async Task<IEnumerable<Product>> GetProductsAsync(string catalogAddress)
+        {
+            var config = Configuration.Default.WithDefaultLoader();
+            using var context = BrowsingContext.New(config);
+            using var document = await context.OpenAsync($"{_BaseURL}{catalogAddress}");
+
+            
+            var elements = document.GetElementsByClassName("page-link");
+
+            if (elements.FirstOrDefault() is null || elements.Length < 2)
+                return await GetPageProductsAsync(catalogAddress);
+
+            //for (int i = 0; i < elements.Length; i++)
+            //{
+            //    Console.WriteLine($"Страница {i}: {elements[i].GetAttribute("href")}");
+            //}
+
+            string? url = elements[elements.Length - 2].GetAttribute("href");
+            if (url is null || url.StartsWith('#'))
+                return await GetPageProductsAsync(catalogAddress);
+
+            int cnt = 0; // количество страниц
+
+            var lastPage = url.Split('=').Last();
+            var pageUrl = url.Substring(0, url.Length - lastPage.Length);
+
+            if (!int.TryParse(lastPage, out cnt))
+                return await GetPageProductsAsync(catalogAddress);
+
+            //Console.WriteLine($"Кол-во страниц: {cnt}");
+
+            List<Product> products = new();
+            //Console.Write($"Страница 1: {catalogAddress} | ");
+            products.AddRange(await GetPageProductsAsync(catalogAddress));
+            //Console.Write($"кол-во товаров на странице 1: {products.Count} | ");
+            //Console.WriteLine($"всего: {products.Count}");
+
+            for (int i = 2; i <= cnt; i++)
+            {
+                //Console.Write($"Страница {i}: {pageUrl}{i} | ");
+                int tmp = products.Count;
+                products.AddRange(await GetPageProductsAsync($"{pageUrl}{i}"));
+                //Console.Write($"кол-во товаров на странице {i}: {products.Count - tmp} | ");
+                //Console.WriteLine($"всего: {products.Count}");
+            }
+
+            return products;
+        }
+
         public async Task<IEnumerable<Product>> GetPageProductsAsync(string pageAddress)
         {
             var config = Configuration.Default.WithDefaultLoader();

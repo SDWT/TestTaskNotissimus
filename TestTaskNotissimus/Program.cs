@@ -15,9 +15,25 @@ namespace TestTaskNotissimus
             //TestGetProduct("/catalog/mashinki_iz_multfilmov/fortnite_fnt0163_mashina_quadcrasher/");
 
             TestGetProducts("/catalog/boy_transport/");
+            //TestGetPageProducts("/catalog/boy_transport/");
+        }
+        static void TestGetProducts(string address)
+        {
+            Console.WriteLine(address);
+            Console.WriteLine();
+
+            var parser = new ToyRuParser();
+            var products = parser.GetProductsAsync(address).Result;
+
+            foreach (var product in products)
+            {
+                //WriteProduct(product);
+            }
+            Console.WriteLine();
+            Console.WriteLine($"Кол-во товаров:{products.Count()}");
         }
 
-        static void TestGetProducts(string address)
+        static void TestGetPageProducts(string address)
         {
             Console.WriteLine(address);
             Console.WriteLine();
@@ -27,8 +43,10 @@ namespace TestTaskNotissimus
 
             foreach (var product in products)
             {
-                WriteProduct(product);
+                //WriteProduct(product);
             }
+            Console.WriteLine();
+            Console.WriteLine($"Кол-во товаров:{products.Count()}");
         }
 
         static void TestGetProduct(string address)
