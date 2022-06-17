@@ -15,6 +15,11 @@ namespace TestTaskNotissimus.Parsers
 
         //public async Task<Product> GetProduct(string address)
 
+        /// <summary>
+        /// Получение товаров из каталога
+        /// </summary>
+        /// <param name="catalogAddress">Ссылка на каталог</param>
+        /// <returns>Товары</returns>
         public async Task<IEnumerable<Product>> GetProductsAsync(string catalogAddress)
         {
             var config = Configuration.Default.WithDefaultLoader();
@@ -64,6 +69,11 @@ namespace TestTaskNotissimus.Parsers
             return products;
         }
 
+        /// <summary>
+        /// Получение товаров с одной страницы
+        /// </summary>
+        /// <param name="pageAddress">Ссылка на страницу каталога</param>
+        /// <returns>Товары</returns>
         public async Task<IEnumerable<Product>> GetPageProductsAsync(string pageAddress)
         {
             var config = Configuration.Default.WithDefaultLoader();
