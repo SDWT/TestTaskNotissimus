@@ -32,6 +32,7 @@ namespace TestTaskNotissimus.Extensions
             strB.Append(separator);
 
             strB.Append(product.ProductUrl);
+            strB.Append('\n');
             return strB.ToString();
         }
 
