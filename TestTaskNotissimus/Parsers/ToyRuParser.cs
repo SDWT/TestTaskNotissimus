@@ -15,11 +15,11 @@ namespace TestTaskNotissimus.Parsers
 
         //public async Task<Product> GetProduct(string address)
 
-        public async Task<IEnumerable<Product>> GetPageProductsAsync(string catalogAddress)
+        public async Task<IEnumerable<Product>> GetPageProductsAsync(string pageAddress)
         {
             var config = Configuration.Default.WithDefaultLoader();
             using var context = BrowsingContext.New(config);
-            using var document = await context.OpenAsync(catalogAddress);
+            using var document = await context.OpenAsync($"{_BaseURL}{pageAddress}");
 
             var products = new List<Product>();
 
@@ -35,7 +35,7 @@ namespace TestTaskNotissimus.Parsers
                     return false;
 
                 //Console.WriteLine(url);
-                productsUrls.Add($"{_BaseURL}{url}");
+                productsUrls.Add(url);
                 return true;
             });
 
@@ -54,7 +54,7 @@ namespace TestTaskNotissimus.Parsers
         {
             var config = Configuration.Default.WithDefaultLoader();
             using var context = BrowsingContext.New(config);
-            using var document = await context.OpenAsync(address);
+            using var document = await context.OpenAsync($"{_BaseURL}{address}");
 
             Product product = new();
 

@@ -11,10 +11,10 @@ namespace TestTaskNotissimus
             // Test
             string address = "https://www.toy.ru/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/";
 
-            //TestGetProduct("https://www.toy.ru/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/");
-            //TestGetProduct("https://www.toy.ru/catalog/mashinki_iz_multfilmov/fortnite_fnt0163_mashina_quadcrasher/");
+            //TestGetProduct("/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/");
+            //TestGetProduct("/catalog/mashinki_iz_multfilmov/fortnite_fnt0163_mashina_quadcrasher/");
 
-            TestGetProducts("https://www.toy.ru/catalog/boy_transport/");
+            TestGetProducts("/catalog/boy_transport/");
         }
 
         static void TestGetProducts(string address)
