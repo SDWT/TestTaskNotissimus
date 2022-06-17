@@ -1,10 +1,5 @@
 ﻿using AngleSharp;
-using AngleSharp.Io;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using TestTaskNotissimus.Entities;
 using TestTaskNotissimus.Extensions;
 
@@ -12,15 +7,11 @@ namespace TestTaskNotissimus.Parsers
 {
     public class ToyRuParser
     {
-        //private string catalogURL = "https://www.toy.ru/catalog/boy_transport/";
         private string baseURL = "https://www.toy.ru";
         private readonly string filename = "out.csv";
         private readonly string region;
-
-        //private object locker = new();
         public int countActiveThreads = 0;
 
-        //public async Task<Product> GetProduct(string address)
 
         public ToyRuParser(string filename, string region = "")
         {
@@ -55,6 +46,7 @@ namespace TestTaskNotissimus.Parsers
             //}
 
             string? url = elements[elements.Length - 2].GetAttribute("href");
+
             if (url is null || url.StartsWith('#'))
                 return await GetPageProductsAsync(catalogAddress);
 
@@ -70,6 +62,7 @@ namespace TestTaskNotissimus.Parsers
 
             List<Product> products = new();
             //Console.Write($"Страница 1: {catalogAddress} | ");
+
             products.AddRange(await GetPageProductsAsync(catalogAddress));
             //Console.Write($"кол-во товаров на странице 1: {products.Count} | ");
             //Console.WriteLine($"всего: {products.Count}");
@@ -77,6 +70,7 @@ namespace TestTaskNotissimus.Parsers
             for (int i = 2; i <= cnt; i++)
             {
                 //Console.Write($"Страница {i}: {pageUrl}{i} | ");
+
                 int tmp = products.Count;
                 products.AddRange(await GetPageProductsAsync($"{pageUrl}{i}"));
                 //Console.Write($"кол-во товаров на странице {i}: {products.Count - tmp} | ");
@@ -146,10 +140,7 @@ namespace TestTaskNotissimus.Parsers
             using var context = BrowsingContext.New(config);
             context.SetCookie(new AngleSharp.Dom.Url($"{baseURL}"), "BITRIX_SM_city=61000001000");
             using var document = await context.OpenAsync($"{baseURL}{address}");
-            //using var document = await context.OpenAsync(res =>
-            //    res.Address($"{_BaseURL}{address}").
-            //        Header(HeaderNames.SetCookie, "BITRIX_SM_city=61000001000"));
-
+           
             //Console.WriteLine(document.Cookie);
 
             Product product = new();

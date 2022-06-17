@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using TestTaskNotissimus.Entities;
-using TestTaskNotissimus.Extensions;
+﻿using TestTaskNotissimus.Extensions;
 using TestTaskNotissimus.Parsers;
 
 namespace TestTaskNotissimus
@@ -15,6 +12,7 @@ namespace TestTaskNotissimus
             if (File.Exists(filename))
                 File.Delete(filename);
             File.Create(filename).Close();
+
             Dictionary<string, string> citiesCode = new Dictionary<string, string>();
             citiesCode.Add("Санкт-Петербург", "78000000000");
             citiesCode.Add("Ростов-на-Дону", "61000001000");
@@ -23,17 +21,6 @@ namespace TestTaskNotissimus
 
             await ParseToCsvProducts(address);
             await ParseToCsvProducts(address, citiesCode["Ростов-на-Дону"]);
-
-
-            // Test
-            //string address = "https://www.toy.ru/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/";
-
-            //TestGetProduct("/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/");
-            //TestGetProduct("/catalog/mashinki_iz_multfilmov/fortnite_fnt0163_mashina_quadcrasher/");
-
-            //TestGetPageProducts("/catalog/boy_transport/");
-            //TestGetProducts("/catalog/boy_transport/");
-            //await TestToCsvProducts("/catalog/boy_transport/");
 
         }
 
@@ -55,12 +42,12 @@ namespace TestTaskNotissimus
 
             var parser = new ToyRuParser(filename);
             await parser.ToCSVProductsAsync(address);
-            
+
             // Найти решение ожидания
             //while (ThreadPool.ThreadCount > 0)
             while (parser.countActiveThreads > 0)
             {
-                
+
                 //Console.WriteLine($"Активные потоки: {ThreadPool.ThreadCount}");
                 //Console.WriteLine($"Активные потоки: {parser.countActiveThreads}");
                 //Task.Delay(500);
