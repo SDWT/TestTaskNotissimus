@@ -10,7 +10,7 @@ namespace TestTaskNotissimus.Parsers
 {
     public class ToyRuParser
     {
-        private string _CatalogURL = "https://www.toy.ru/catalog/boy_transport/";
+        //private string _CatalogURL = "https://www.toy.ru/catalog/boy_transport/";
         private string _BaseURL = "https://www.toy.ru";
 
         //public async Task<Product> GetProduct(string address)

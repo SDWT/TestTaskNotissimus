@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text;
 using TestTaskNotissimus.Entities;
+using TestTaskNotissimus.Extensions;
 using TestTaskNotissimus.Parsers;
 
 namespace TestTaskNotissimus
@@ -9,12 +11,12 @@ namespace TestTaskNotissimus
         static void Main(string[] args)
         {
             // Test
-            string address = "https://www.toy.ru/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/";
+            //string address = "https://www.toy.ru/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/";
 
             //TestGetProduct("/catalog/toys-spetstekhnika/childs_play_lvy025_fermerskiy_traktor/");
             //TestGetProduct("/catalog/mashinki_iz_multfilmov/fortnite_fnt0163_mashina_quadcrasher/");
 
-            TestGetProducts("/catalog/boy_transport/");
+            //TestGetProducts("/catalog/boy_transport/");
             //TestGetPageProducts("/catalog/boy_transport/");
         }
         static void TestGetProducts(string address)
@@ -27,7 +29,7 @@ namespace TestTaskNotissimus
 
             foreach (var product in products)
             {
-                //WriteProduct(product);
+                //product.ToConsole();
             }
             Console.WriteLine();
             Console.WriteLine($"Кол-во товаров:{products.Count()}");
@@ -43,7 +45,7 @@ namespace TestTaskNotissimus
 
             foreach (var product in products)
             {
-                //WriteProduct(product);
+                //product.ToConsole();
             }
             Console.WriteLine();
             Console.WriteLine($"Кол-во товаров:{products.Count()}");
@@ -56,21 +58,8 @@ namespace TestTaskNotissimus
 
             var parser = new ToyRuParser();
 
-            WriteProduct(parser.GetProductAsync(address).Result);
+            parser.GetProductAsync(address).Result.ToConsole();
 
-        }
-
-        static void WriteProduct(Product product)
-        {
-            Console.WriteLine($"Регион: {product.RegionName}");
-            Console.WriteLine($"Хлебные крошки: {product.BreadCrumbs}");
-            Console.WriteLine($"Название: {product.ProductName}");
-            Console.WriteLine($"Цена: {product.Price}");
-            Console.WriteLine($"Старая цена: {product.OldPrice}");
-            Console.WriteLine($"Наличие: {product.IsInStock}");
-            Console.WriteLine($"Ссылки на изображения: {product.ImageUrls}");
-            Console.WriteLine($"Ссылка на товар: {product.ProductUrl}");
-            Console.WriteLine();
         }
     }
 }
