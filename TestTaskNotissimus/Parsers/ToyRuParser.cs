@@ -15,6 +15,36 @@ namespace TestTaskNotissimus.Parsers
 
         //public async Task<Product> GetProduct(string address)
 
+        public async Task<IEnumerable<Product>> GetPageProductsAsync(string catalogAddress)
+        {
+            var config = Configuration.Default.WithDefaultLoader();
+            using var context = BrowsingContext.New(config);
+            using var document = await context.OpenAsync(catalogAddress);
+
+            var products = new List<Product>();
+
+            var productsUrls = new List<string>();
+
+            
+            var strB = new StringBuilder();
+            // Ссылки на первой странице каталога
+            _ = document.QuerySelectorAll("*[itemprop=\"name\"]").All((el) =>
+            {
+                string? url = el.GetAttribute("href");
+                if (url == null)
+                    return false;
+
+                //Console.WriteLine(url);
+                productsUrls.Add($"{_BaseURL}{url}");
+                return true;
+            });
+
+            foreach (var url in productsUrls)
+                products.Add(await GetProductAsync(url));
+
+            return products;
+        }
+
         /// <summary>
         /// Получение данных о товаре
         /// </summary>
@@ -26,7 +56,7 @@ namespace TestTaskNotissimus.Parsers
             using var context = BrowsingContext.New(config);
             using var document = await context.OpenAsync(address);
 
-            Product product = new Product();
+            Product product = new();
 
             // Если не загрузился документ
             if (document is null)
@@ -70,7 +100,7 @@ namespace TestTaskNotissimus.Parsers
             // Ссылки на изображения
             _ = document.GetElementsByClassName("card-slider-nav").All((el) =>
             {
-                Console.WriteLine($"{el.ChildElementCount}");
+                //Console.WriteLine($"{el.ChildElementCount}");
                 foreach (var item in el.Children)
                 {
                     if (item.FirstElementChild is null)
